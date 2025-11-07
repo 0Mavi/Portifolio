@@ -1,5 +1,5 @@
 {
-  "name": "circuitoneumann",
+  "name": "LandingPage",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,25 +11,18 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
-    "@react-three/drei": "^10.1.2",
-    "@react-three/fiber": "^9.1.2",
     "@tailwindcss/vite": "^4.1.8",
-    "circuitoneumann": "file:",
     "gsap": "^3.13.0",
-    "lucide-react": "^0.513.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2",
-    "tailwindcss": "^4.1.8",
-    "three": "^0.177.0"
+    "react-router-dom": "^7.9.5",
+    "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.4.1",
-    "daisyui": "^5.0.43",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
