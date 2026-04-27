@@ -14,7 +14,7 @@ export const Typewriter = ({ text, delay = 0, className = "" }: TypewriterProps)
     visible: {
       opacity: 1,
       transition: { 
-        staggerChildren: 0.05, 
+        staggerChildren: 0.03, 
         delayChildren: delay 
       },
     },
