@@ -1,57 +1,67 @@
-# Documentação do Projeto: Portfólio Pessoal (Landing Page)
+# Documentação do Projeto: Portfólio Pessoal
 
-## 1. Visão Geral
-O projeto é um **portfólio pessoal interativo** desenvolvido para demonstrar habilidades avançadas em desenvolvimento frontend, com foco rigoroso em **Motion Design**, acessibilidade e UI/UX premium. A aplicação é uma Single Page Application (SPA) estática projetada para rodar localmente no navegador sem a necessidade de um backend dedicado, servindo como uma vitrine profissional de projetos e experiências.
+## Visão Geral
+Este documento detalha a arquitetura, regras de negócio, funcionalidades e a estrutura técnica do projeto de portfólio pessoal (Maria Vitória - Frontend Developer). O projeto é uma Single Page Application (SPA) desenvolvida para exibir os projetos, habilidades e experiências da desenvolvedora, com forte ênfase em design, animações (motion design) e performance.
 
-## 2. Tecnologias Utilizadas (Stack Principal)
-- **Framework Core**: React 19 (com Vite)
-- **Linguagem**: TypeScript
-- **Estilização & Design System**: Tailwind CSS v4, variáveis CSS nativas (Global.css)
-- **Motion Design & Animações**: Framer Motion (para transições orquestradas, drag, orbs de fundo) e CSS Keyframes (para animações infinitas de alta performance).
-- **Roteamento**: React Router DOM v7
-- **Geração de PDF**: `@react-pdf/renderer` (para criação dinâmica e download do currículo)
-- **Componentes Base**: Radix UI / Shadcn UI adaptados, Embla Carousel.
-- **Ícones**: Lucide React.
+## Stack Tecnológico
+- **Core:** React, TypeScript, Vite.
+- **Estilização:** Tailwind CSS (com variáveis CSS customizadas para temas e cores).
+- **Animações:** Framer Motion (animações fluidas, transições de página, 3D), animações CSS puras (para otimização de performance, ex: partículas na home).
+- **Roteamento:** React Router DOM.
+- **Componentização UI:** Radix UI / Shadcn UI (adaptado), Lucide React (ícones).
+- **Funcionalidades Extras:** `@react-pdf/renderer` (para geração e download dinâmico do currículo).
 
-## 3. Arquitetura de Dados (Mock Backend)
-Como não há um servidor de banco de dados, o projeto utiliza um arquivo central estático como "Data Layer":
-- **Caminho**: `src/data/projectsData.ts`
-- **Estrutura**: Um Array estático contendo os objetos de tipo `Project`.
-- **Modelagem do Projeto**: Cada projeto possui `id`, `slug` (usado para URL amigável), `title`, `category`, `image` (capa principal em alta resolução), `logo`, `description` (sinopse detalhada), `year`, `role` (função no projeto), e uma `gallery` (array com objetos contendo src e alt para imagens adicionais).
-- **Regra de Busca (Filtro)**: O método exportado `getProjectBySlug(slug: string)` atua como um repositório para resgatar dados do projeto baseado na rota atual.
+## Estrutura de Diretórios (`src/`)
 
-## 4. Estrutura de Rotas e Navegação
-A navegação é orquestrada no arquivo `src/routes.tsx` por meio do `createBrowserRouter`, envolvendo tudo em um `AppLayout` (Layout principal).
+- `assets/`: Arquivos estáticos (imagens, fontes, ícones).
+- `components/`: Componentes reutilizáveis da interface.
+  - `CustomCursor/`: Cursor customizado magnético que reage a elementos interativos.
+  - `Header/` & `Footer/`: Componentes globais de navegação e rodapé.
+  - `Projects/`: Componentes específicos da vitrine de projetos (ex: cards com carrossel).
+  - `ResumePDF/`: Componente responsável pela geração estruturada do PDF do currículo.
+  - `Typewriter/`: Efeito visual de digitação usado na página inicial.
+  - `ui/`: Componentes base reutilizáveis (botões, carrossel, etc., possivelmente baseados no shadcn/ui).
+- `data/`: Contém a base de dados estática do projeto.
+  - `projectsData.ts`: Fonte da verdade central contendo todos os dados dos projetos (título, slug, categoria, imagens, descrição, ano, role).
+- `lib/`: Utilitários gerais (ex: `utils.ts` para mesclagem de classes do Tailwind).
+- `pages/`: Componentes que representam as páginas da aplicação.
+  - `Home/`: Página de aterrissagem (landing page).
+  - `Projects/`: Listagem e vitrine interativa dos projetos.
+    - `ProjectDetail/`: Página dinâmica (`/projects/:slug`) exibindo detalhes profundos de um projeto selecionado.
+  - `About/`: Página "Sobre Mim", detalhando a trajetória e fornecendo a funcionalidade de download do currículo.
+  - `layout/`: Layout base da aplicação (`AppLayout`), envolvendo as rotas.
+  - `404/`: Página de "Não Encontrado" customizada.
+- `routes.tsx`: Definição das rotas e mapeamento para os componentes de página.
+- `Global.css`: Estilos globais, incluindo as declarações de variáveis CSS (temas dark/light, paleta de cores primárias "purple and black").
 
-| Rota | Página | Descrição |
-|---|---|---|
-| `/` | `Home` | Landing page principal com partículas, orbs dinâmicas, máquina de escrever (`Typewriter`) e CTAs de navegação. |
-| `/projects` | `Projects` | Vitrine de todos os projetos cadastrados no portfólio. |
-| `/projects/:slug` | `ProjectDetail` | Página detalhada de um projeto específico, montada dinamicamente pelo slug. |
-| `/about` | `AboutMe` | Informações sobre a desenvolvedora, stack tecnológico, foto de perfil e download do CV. |
-| `/*` | `NotFound` | Fallback de erro padrão (Página 404). |
+## Funcionalidades Principais
 
-## 5. Regras de Negócio, Funcionalidades e Fluxo
+### 1. Landing Page (Home)
+- **Apresentação Visual:** Utiliza um grid de profundidade, partículas flutuantes puras em CSS para performance, orbs decorativas animadas e background parallax.
+- **Tipografia Dinâmica:** Uso do componente `Typewriter` para a introdução.
+- **Navegação Rápida:** Botões de chamada para ação (CTAs) direcionando para "Projetos" e "Sobre Mim" com animações de stagger.
 
-### 5.1. Página Inicial (Home)
-- **Apresentação Otimizada**: Utiliza injeção nativa de CSS `@keyframes` no DOM para renderizar "partículas" de poeira cósmica/brilho no fundo. Esta foi uma decisão técnica arquitetural (regra) explícita no código para manter alto desempenho e evitar overhead no React.
-- **Fluxo Call-to-Action**: Apresenta de imediato os botões magnéticos para as seções chaves (`/projects` e `/about`).
+### 2. Vitrine de Projetos (Projects)
+- **Carrossel Interativo:** A visualização dos projetos não utiliza uma listagem estática, mas sim um carrossel dinâmico (`Carousel` da ui).
+- **Seleção Dinâmica (Filtro Visual):** Ao passar o mouse (hover) sobre um card no carrossel superior, o projeto correspondente é ativado (`activeProject` state).
+- **Showcase de Fundo:** A seção inferior da tela reage instantaneamente ao projeto ativo, atualizando a imagem de fundo (com transições crossfade de desfoque e escala), título, categoria e cor de destaque daquele projeto.
+- **Acesso ao Detalhe:** O clique no card do carrossel ou no showcase de fundo redireciona para a página interna do projeto.
 
-### 5.2. Vitrine de Projetos (`/projects`)
-- **Lista/Carrossel Dinâmico**: Os projetos são carregados da constante `projects` (em `projectsData.ts`). Eles são listados em um carrossel horizontal de rolagem infinita (`loop: true`).
-- **Estado Híbrido (Hover)**: Ao passar o mouse (Hover) em um card específico no carrossel superior, um estado local (`activeProject`) é alterado.
-- **Showcase Interativo**: A mudança no `activeProject` desencadeia uma animação de transição (usando `AnimatePresence`) na parte inferior da tela, que carrega instantaneamente a imagem, o título e a categoria do projeto ativado como uma vitrine expansiva.
-- **Navegação**: O clique final em um card de projeto redireciona para `/projects/:slug`.
+### 3. Detalhamento Dinâmico de Projeto (`/projects/:slug`)
+- **Roteamento Dinâmico:** Captura o parâmetro `:slug` da URL.
+- **Resolução de Dados:** Utiliza a função `getProjectBySlug` do arquivo `projectsData.ts` para buscar todas as informações técnicas e imagens do projeto selecionado para renderização.
 
-### 5.3. Detalhes do Projeto (`/projects/:slug`)
-- **Regra de Fallback e Tratamento de Erro**: O sistema lê o parâmetro `:slug` da URL. Se a função `getProjectBySlug` retornar falso (projeto inexistente, slug digitado errado), a página invoca a regra `<Navigate to="/projects" replace />`, redirecionando o usuário graciosamente de volta à listagem.
-- **Renderização Sequencial**: As informações (metadados de ano, função, descrição e a galeria de imagens secundárias) surgem organizadas por meio de stagger animations de entrada (`fadeUp`), conferindo um aspecto luxuoso na visualização.
+### 4. Sobre Mim & Currículo PDF (About)
+- **Apresentação Pessoal:** Descreve a experiência e habilidades.
+- **Geração de PDF:** Integração avançada com `@react-pdf/renderer` para permitir que o usuário faça o download do currículo em formato PDF gerado on-the-fly, mantendo alinhamento com a identidade visual do portfólio.
 
-### 5.4. Sessão "Sobre" e Download Dinâmico (`/about`)
-- **Grade de Habilidades**: Separação semântica em Frontend, Backend & Integração, e Ferramentas.
-- **Funcionalidade de Currículo Dinâmico**: É acionada a biblioteca `react-pdf/renderer` envolvendo o botão de CTA "download resume". Este botão não faz requisição de rede para baixar um arquivo PDF estático hospedado; em vez disso, o componente interno `<ResumePDF />` "compila" e converte o layout React para PDF instaneamente de forma declarativa e no lado do cliente.
+### 5. Identidade Visual e Motion Design
+- **Tema Customizado:** Sistema de tema coeso (Purple and Black theme) com adaptações precisas para light e dark modes.
+- **Animações (Layer 1 e Layer 2):** Transições de página fluídas (`AnimatePresence`), hover states em botões, movimento 3D no hover dos cards dos projetos (tilt e escala), e delays sequenciais de renderização nas listagens para criar um efeito cinematográfico (motion design premium).
+- **Cursor Customizado:** Substituição do cursor padrão do navegador para um dot magnético.
 
-## 6. Padrões de Layout e Motion Design (Regras Visuais)
-1. **Glassmorfismo e Gradientes**: Extenso uso de gradientes radiais, `color-mix`, e máscaras de ruído (SVG Backgrounds com `fractalNoise`) aplicadas em mix-blend.
-2. **Custom Cursor**: O projeto possui um ecossistema de ponteiro modificado (`CustomCursor`), o qual frequentemente reage magneticamente a botões (Magnetic) se aproximando de links ou ações.
-3. **Gerenciamento de Z-Index e Layers**: A profundidade visual é rigidamente controlada através de camadas renderizadas consecutivamente na Home e About (`Layer 0`, `Layer 1`, etc.), onde cada layer é tratada por propriedades separadas do framer-motion (`scaleY`, `rotateX`, `spring` transitions).
+## Regras de Negócio e Fluxo de Dados
+
+- **Fonte Estática (`projectsData.ts`):** Para adicionar, remover ou editar um projeto, nenhuma alteração em componentes é necessária. Todo o conteúdo da vitrine de projetos e das páginas de detalhe é mapeado diretamente a partir da constante `projects` (que segue a interface `Project`).
+- **Gerenciamento de Estado de Visualização:** Na página de projetos principais, o estado de "qual projeto está em destaque" é volátil e gerenciado localmente pelo hook `useState` atrelado ao evento de mouse hover nos itens do carrossel.
+- **Performance de Renderização:** Elementos contínuos e muito pesados (como as partículas de background) usam `@keyframes` do CSS inseridos dinamicamente e `will-change` no style, em vez de depender inteiramente do loop do Framer Motion, evitando sobrecarga na main thread e melhorando os FPS.
